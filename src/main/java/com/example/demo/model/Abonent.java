@@ -35,7 +35,7 @@ public class Abonent {
     private String telephone;
 
     @Column(name = "get_meter_number", nullable = false)
-    private String getMeterNumber;
+    private String MeterNumber;
 
     @Column(name = "user_code", nullable = false)
     private String abonentCode;

@@ -10,16 +10,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.model.Abonent;
-import com.example.demo.model.Abonent_DTO;
+import com.example.demo.model.AbonentInputDTO;
+import com.example.demo.model.AbonentOutputDTO;
+import com.example.demo.model.Depts;
+import com.example.demo.model.Depts_DTO;
 import com.example.demo.model.Region;
 import com.example.demo.model.Tariff;
 import com.example.demo.repository.RegionRepository;
 import com.example.demo.repository.TariffRepository;
 import com.example.demo.service.AbonentService;
+import com.example.demo.service.DeptsService;
 import com.example.demo.service.RegionService;
 import com.example.demo.service.TariffService;
 
@@ -42,9 +48,13 @@ public class AbonentController {
     private TariffService tariffService;
 
     @Autowired
+    private DeptsService deptsService;
+
+    @Autowired
     private ModelMapper modelMapper;
 
-    public AbonentController(AbonentService abonentService, RegionService regionService, TariffService tariffService, ModelMapper modelMapper) {
+    public AbonentController(AbonentService abonentService, RegionService regionService, 
+            TariffService tariffService, ModelMapper modelMapper) {
         this.abonentService = abonentService;
         this.tariffService = tariffService;
         this.regionService = regionService;
@@ -53,7 +63,7 @@ public class AbonentController {
 
 
     @PostMapping
-    public ResponseEntity<Abonent_DTO> saveAbonent(@RequestBody Abonent_DTO abonent_dto) {
+    public ResponseEntity<AbonentInputDTO> saveAbonent(@RequestBody AbonentInputDTO abonent_dto) {
 
         Abonent abonent = modelMapper.map(abonent_dto, Abonent.class);
 
@@ -64,7 +74,7 @@ public class AbonentController {
         Tariff tariff = tariffService.getTariffByName(abonent_dto.getTariffName());
         abonent.setTariff(tariff);
         
-        Abonent_DTO abonentDTO = modelMapper.map(abonent, Abonent_DTO.class);
+        AbonentInputDTO abonentDTO = modelMapper.map(abonent, AbonentInputDTO.class);
         abonentService.saveAbonent(abonent);
         
         return ResponseEntity.status(HttpStatus.CREATED).body(abonentDTO);
@@ -78,11 +88,28 @@ public class AbonentController {
     }
     
     @GetMapping("{abonentCode}")
-    public ResponseEntity<Abonent_DTO> getAbonentById(@PathVariable(name = "abonentCode") String abonentCode) {
+    public ResponseEntity<AbonentOutputDTO> getAbonentById(@PathVariable String abonentCode) {
         Abonent abonent = abonentService.getAbonentByAbonentCode(abonentCode);
-        Abonent_DTO abonentDTO = modelMapper.map(abonent, Abonent_DTO.class);
+        List<Depts> deptHistory = deptsService.getDeptsByAbonentCode(abonentCode);
+        
+        // Sort deptHistory by date in descending order
+        deptHistory.sort(Comparator.comparing(Depts::getDate).reversed());
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(abonentDTO);
+        // Get the latest remaining dept
+        Integer latestRemainingDept = deptHistory.isEmpty() ? null : deptHistory.get(0).getRemainingDept();
+
+        // Map deptHistory to include only remainingDept and date
+        // List<Depts_DTO> filteredDeptHistory = deptHistory.stream()
+        //         .map(dept -> new Depts_DTO(dept.getId(), dept.getRemainingDept(), dept.getDate(), dept.getAbonent().getAbonentCode()))
+        //         .collect(Collectors.toList());
+
+        AbonentOutputDTO abonentOutputDTO = modelMapper.map(abonent, AbonentOutputDTO.class);
+        abonentOutputDTO.setLatestRemainingDept(latestRemainingDept);
+        abonentOutputDTO.setRegionName(abonent.getRegion().getRegionName());
+        abonentOutputDTO.setTariffName(abonent.getTariff().getTariffName());
+        // abonentOutputDTO.setDeptHistory(filteredDeptHistory);
+
+        return ResponseEntity.ok(abonentOutputDTO);
     }
 
     @PutMapping("{id}")
