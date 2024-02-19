@@ -104,6 +104,14 @@ This API service provides functionality for managing transactions and related da
   <li><strong>Response:</strong> Returns a list of tariffs
 </ul>
 
+<h4>Get Tariff by ID</h4>
+<ul>
+  <li><strong>Endpoint:</strong> <code>GET /api/tariffs/{id}</code></li>
+  <li><strong>Description:</strong> Retrieves the details of a specific tariff by its ID.</li>
+  <li><strong>Path Parameter:</strong> <code>id</code>: The ID of the tariff to retrieve.</li>
+  <li><strong>Response:</strong> Returns the details of the tariff.</li>
+</ul>
+
 ## Dependencies
 - **Spring Boot Starter Web**: for building RESTful APIs.
 - **Spring Boot Starter Data JPA**: for working with relational databases using JPA.
