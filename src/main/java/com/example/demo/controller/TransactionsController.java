@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -41,10 +42,22 @@ public class TransactionsController {
     }
 
     @GetMapping("{abonentCode}")
-    public List<Transactions> getTransactionsByAbonentCode(@PathVariable("abonentCode") String abonentCode) {
+    public List<Transactions_DTO> getTransactionsByAbonentCode(@PathVariable("abonentCode") String abonentCode) {
         List<Transactions> transactions = transactionsService.getTransactionsByAbonentCode(abonentCode);
-        // Transactions_DTO transactions_DTO = new Transactions_DTO();
-        // transactions_DTO.setTransactionsLists(transactions);
-        return transactions;
+
+
+        
+        List<Transactions_DTO> dtoList = transactions.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        
+        return dtoList;
+    }
+
+    private Transactions_DTO convertToDTO(Transactions transaction) {
+        Transactions_DTO dto = new Transactions_DTO();
+        dto.setTransactionAmount(transaction.getTransactionAmount());
+        dto.setTransactionDate(transaction.getTransactionDate());
+        return dto;
     }
 }

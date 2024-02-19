@@ -16,7 +16,6 @@ import lombok.Data;
 @Entity
 @Table(name = "depts")
 public class Depts {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -28,6 +27,6 @@ public class Depts {
     private LocalDateTime date;
 
     @ManyToOne
-    @JoinColumn(name = "abonent", nullable = false)
-    private Abonent abonent;   
+    @JoinColumn(name = "abonent_id", nullable = false)
+    private Abonent abonent;    
 }

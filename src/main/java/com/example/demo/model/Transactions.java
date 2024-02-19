@@ -27,6 +27,6 @@ public class Transactions {
     private LocalDateTime transactionDate;
 
     @ManyToOne
-    @JoinColumn(name = "abonent", nullable = false)
+    @JoinColumn(name = "abonent_id", nullable = false)
     private Abonent abonent; 
 }
