@@ -12,12 +12,13 @@ This API service provides functionality for managing transactions and related da
 
 ## Setup
 <ol>
-    <li>Clone the repository from GitHub: link-to-repo</li>
-    <li>Ensure you have Java and MySQL installed on your system.</li>
-    <li>Configure the application properties file (application.properties) with your MySQL database details.</li>
-    <li>Build and run the application using Maven or your preferred IDE.</li>
-    <li>Once the application is running, you can start making requests to the API endpoints.</li>
+  <li>Clone the repository from GitHub: <a href="link-to-repo">link-to-repo</a></li>
+  <li>Ensure you have Java and MySQL installed on your system.</li>
+  <li>Configure the application properties file (<code>application.properties</code>) with your MySQL database details.</li>
+  <li>Build and run the application using Gradle or your preferred IDE.</li>
+  <li>Once the application is running, you can start making requests to the API endpoints.</li>
 </ol>
+
 
 ## Endpoints
 
