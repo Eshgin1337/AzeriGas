@@ -1,13 +1,17 @@
 package com.example.demo.service;
 
 import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+
+import com.example.demo.dto.AbonentInputDTO;
 import com.example.demo.model.Abonent;
 
 public interface AbonentService {
-    Abonent saveAbonent(Abonent abonent);
-    List<Abonent> getAbonents();
-    Abonent getAbonentById(long Id);
-    Abonent updateAbonent(Abonent abonent, long Id);
-    void deleteAbonent(long Id);
-    Abonent getAbonentByAbonentCode(String abonentCode);
+    ResponseEntity<?> saveAbonent(AbonentInputDTO abonentDTO);
+    ResponseEntity<?> getAbonents();
+    // Abonent getAbonentById(long Id);
+    ResponseEntity<?> updateAbonent(AbonentInputDTO abonent, long Id);
+    ResponseEntity<?> deleteAbonent(long Id);
+    ResponseEntity<?> getAbonentByAbonentCode(String abonentCode);
 }

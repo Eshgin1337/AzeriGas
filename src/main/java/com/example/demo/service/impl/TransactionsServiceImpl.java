@@ -36,7 +36,6 @@ public class TransactionsServiceImpl implements TransactionsService{
         transaction.setTransactionDate(LocalDateTime.now());
         
         List<Depts> deptsList = deptsRepository.findByAbonent(abonent);
-        System.out.println(deptsList);
         Depts latestDept = new Depts();
         if (!deptsList.isEmpty()) {
             latestDept = deptsList.stream()
